@@ -148,7 +148,7 @@ setTimeout(function(){
 }
 svg1.addEventListener("mouseup",fire);
 
-for(var i=0;i<=0;i++){
+for(var i=0;i<=2;i++){
 x=Math.round(((Math.random()*92)));
 y=Math.round(((Math.random()*92)));
 while(Math.getDistance(playerX,playerY,x,y)<25||x<8||y<8){
@@ -174,9 +174,9 @@ monster_area.appendChild(monster);
 function check_coll(){
 for(var i=0;i<=2;i++){
 monsterX=String(monsters_coor=[i]).substr(0,1);
-monsterY=String(monsters_coor=[i]).substr(3,4);
-colli=Math.round(Math.getDistance(monsterX,monsterY,mx,my));
-div2.innerHTML+=monsterX+" "+monsterY+" "+colli+" "+Math.round(Math.getDistance(monsterX,monsterY,mx,my))+"<br>";
+monsterY=String(monsters_coor=[i]).substr(4,5);
+colli=Math.round(Math.getDistance(mx,my,monsterX,monsterY));
+div2.innerHTML+="monster"+i+" x: "+monsterX+" y: "+monsterY+" "+colli+"<br>";
 if(colli<2){div2.innerHTML+="boom<br>";}
 }
 }
