@@ -87,6 +87,7 @@ var p1,p2,angleDeg;
 var boun,boun_left,boun_top,bullet,bullet2,monster,dist;
 var firexy;
 var sel_monst;
+var collision=[];
 var max=2;
 
 svg1.style.marginTop=Math.round((wh-800)/2)+"px";
@@ -168,7 +169,7 @@ monster.setAttribute("x",Math.round(x));
 monster.setAttribute("y",Math.round(y));
 monster.setAttribute("width",8);
 monster.setAttribute("height",8);
-monster.setAttribute("class","monst");
+monster.setAttribute("id","monst"+i);
 x=x+4;
 y=y+4;
 if(x<10){x="0"+Math.round(x);}
@@ -179,22 +180,14 @@ monster_area.appendChild(monster);
 }
 
 function check_coll(){
-nb_monst=document.querySelectorAll("#monster_area .monst").length;
-div2.innerHTML=nb_monst+"<br>";
-sel_monst=document.getElementsByClassName("monst");
-for(var i=0;i<nb_monst;i++){
-collision=Math.round(Math.getDistance(mx,my,monsters_coorX[i],monsters_coorY[i]));
-div2.innerHTML+="monster"+(i+1)+" x: "+monsters_coorX[i]+" y: "+monsters_coorY[i]+" distance: "+collision+"<br>";
-if(collision<4){
-/*div2.innerHTML+="💥<br>";
-sel_monst=document.getElementsByClassName("monst");
-for(var j=0;j<=nb_monst;j++){if(sel_monst[j]/*monster_area.removeChild()};*/
-
-
-monster_area.removeChild(sel_monst[i]);
-
-
+div2.innerHTML="";
+for(var i=0;i<=max;i++){
+collision=Math.round(Math.getDistance(mx,my,parseInt(document.getElementById("monst"+i).getAttribute("x"))+4,parseInt(document.getElementById("monst"+i).getAttribute("y"))+4));
+div2.innerHTML+="monster id: monst"+i+" x: "+monsters_coorX[i]+" y: "+monsters_coorY[i]+" distance: "+collision+"<br>";
 }
+if(collision<4){
+var sel=document.getElementById("monst"+i);
+monster_area.removeChild(sel);
 }
 }
 </script>
