@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Exploration</title>
+		<style>
+			html,body{
+				height:100%;
+				margin:0;
+			}
+			body{
+				font-family:Consolas;
+				background:linear-gradient(125deg,#000,#200,#000);
+				text-align:center;
+			}
+			#div1{
+				position:fixed;
+				top:8px;
+				left:8px;
+				padding:8px;
+				color:#ddd;
+				background:rgba(0,0,0,0.6);
+			}
+			#svg1{
+				width:800px;
+				height:800px;
+				border:1px solid black;
+			}
+		</style>
+	</head>
+<body>
+	<div id="div1">a</div>
+	<svg id="svg1" viewBox="0 0 800 800">
+		<defs>
+			<filter height="200%" width="200%" y="-50%" x="-50%" id="blur">
+				<feGaussianBlur stdDeviation="0.5" in="SourceGraphic"/>
+			</filter>
+		</defs>
+		<g id="player" transform="translate(400 400)">
+			<g id="g1" transform="rotate(0 0 0)">
+				<image x="-50" y="-50" width="100" height="100" xlink:href="https://www.nicepng.com/png/full/224-2248272_pixilart-four-swords-link-sprite.png"/>
+			</g>
+		</g>
+		<g transform="translate(400 400)" id="red_dot" style="pointer-events: none;">
+			<circle cx="0" cy="0" r="0.25" fill="#f00"/>
+			<circle cx="0" cy="0" r="2" fill="#f00" opacity="0.125" filter="url(#blur)"/>
+		</g>
+		<path d="m50 50L50 50" stroke="#f00" stroke-width="0.1" fill="none" opacity="0.4" id="path1" style="pointer-events: none;"/>
+	</svg>
+<script>
+	var ww=window.innerWidth;
+	var wh=window.innerHeight;
+	var svg1=document.getElementById("svg1");
+	var player=document.getElementById("player");
+	var red_dot=document.getElementById("red_dot");
+	var g1=document.getElementById("g1");
+	var path1=document.getElementById("path1");
+
+	var x=400,
+		y=400,
+		velY=0,
+		velX=0,
+		speed=2,
+		friction=0.8,
+		keys=[];
+
+	function update(){
+		requestAnimationFrame(update);
+
+		if (keys[90]) {
+			if (velY > -speed) {
+				velY--;
+			}
+		}
+		
+		if (keys[83]) {
+			if (velY < speed) {
+				velY++;
+			}
+		}
+		if (keys[68]) {
+			if (velX < speed) {
+				velX++;
+			}
+		}
+		if (keys[81]) {
+			if (velX > -speed) {
+				velX--;
+			}
+		}
+
+		velY *= friction;
+		y += velY;
+		velX *= friction;
+		x += velX;
+
+		if (x >= 795) {
+			x = 795;
+		} else if (x <= 5) {
+			x = 5;
+		}
+
+		if (y > 795) {
+			y = 795;
+		} else if (y <= 5) {
+			y = 5;
+		}
+
+		player.setAttribute("transform","translate("+x+","+y+")");
+	}
+
+	update();
+
+	document.body.addEventListener("keydown", function (e) {
+		keys[e.keyCode] = true;
+	});
+	document.body.addEventListener("keyup", function (e) {
+		keys[e.keyCode] = false;
+	});
+	
+	svg1.style.marginTop=Math.round((wh-800)/2)+"px";
+	bound=svg1.getBoundingClientRect();
+	bound_left=Math.round(bound.left);
+	bound_top=Math.round(bound.top);
+	
+	function showCoords(event){
+	mx=Math.round((event.clientX-bound_left)/8);
+	my=Math.round((event.clientY-bound_top)/8);
+	red_dot.setAttribute("transform", "translate("+mx+" "+my+")");
+	//light.setAttribute("cx",mx);
+	//light.setAttribute("cy",my);
+	var playerX=x;
+	var playerY=y;
+	var p1={px:playerX,y:playerY};
+	var p2={px:mx,py:my};
+	var angleDeg=Math.round(Math.atan2(p2.py-p1.py,p2.px-p1.px)*180/Math.PI);
+	g1.setAttribute("transform","rotate("+angleDeg+" 0 0)");
+	path1.setAttribute("d","m"+playerX+" "+playerY+"L"+mx+" "+my);
+	dist=Math.round(Math.getDistance(playerX,playerY,mx,my));
+	/*div1.innerHTML="<h1>Spider Shoot</h1>window width: "+ww+"px height: "+wh+"px<br>player x: "+playerX+" y: "+playerY+"<br>mouse x: "+mx+" y: "+my+"<br>angle: "+angleDeg+"°<br>bounding left: "+bound_left+"px top: "+bound_top+"px<br>distance: "+dist+"px<br>shoot timeout: "+(10*dist+300)+"ms<br>number of kills: "+nok;*/
+	}
+	svg1.addEventListener("mousemove", event => {showCoords(event);});
+	
+</script>
+</body>
+</body>
+</html>
